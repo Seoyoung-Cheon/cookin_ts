@@ -21,7 +21,6 @@ const RecipeSearch = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [recipeType, setRecipeType] = useState<RecipeType>('korean');
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 10;
     const inputRef = useRef<HTMLInputElement>(null);
     const isRestoredRef = useRef(false);
 
@@ -196,27 +195,23 @@ const RecipeSearch = () => {
         return false;
     };
 
-    const hasAllSelectedIngredients = (recipe: Recipe): boolean => {
-        if (!selectedIngredients || selectedIngredients.length === 0) {
-            return false;
-        }
 
-        const recipeIngredients =
-            recipe.translatedIngredients || recipe.ingredients || [];
+    // 소스류/조미료 목록 (재료에서 제외)
+    const sauceAndSeasoningList = [
+        '소금', '간장', '된장', '고추장', '고춧가루', '설탕', '후추', '식초',
+        '올리브오일', '식용유', '참기름', '마요네즈', '케첩', '꿀', '물엿',
+        '맛술', '미림', '다시마', '멸치', '멸치육수', '다시마육수',
+        'salt', 'soy sauce', 'doenjang', 'gochujang', 'red pepper powder',
+        'sugar', 'pepper', 'vinegar', 'olive oil', 'cooking oil', 'sesame oil',
+        'mayonnaise', 'ketchup', 'honey', 'mirin', 'dashi'
+    ];
 
-        if (recipeIngredients.length === 0) {
-            return false;
-        }
-
-        return selectedIngredients.every((selectedIngredient) => {
-            return recipeIngredients.some((ingredient) => {
-                const ingredientName =
-                    ingredient.translatedName ||
-                    ingredient.name ||
-                    ingredient.originalName ||
-                    '';
-                return isIngredientMatched(ingredientName, selectedIngredient);
-            });
+    // 소스류/조미료인지 확인
+    const isSauceOrSeasoning = (ingredientName: string): boolean => {
+        const normalized = ingredientName.toLowerCase().trim();
+        return sauceAndSeasoningList.some((sauce) => {
+            const normalizedSauce = sauce.toLowerCase();
+            return normalized.includes(normalizedSauce) || normalizedSauce.includes(normalized);
         });
     };
 
@@ -232,9 +227,23 @@ const RecipeSearch = () => {
             return 0;
         }
 
+        // 소스류/조미료를 제외한 실제 음식 재료만 필터링
+        const foodIngredients = recipeIngredients.filter((ingredient) => {
+            const ingredientName =
+                ingredient.translatedName ||
+                ingredient.name ||
+                ingredient.originalName ||
+                '';
+            return !isSauceOrSeasoning(ingredientName);
+        });
+
+        if (foodIngredients.length === 0) {
+            return 0;
+        }
+
         let matchedCount = 0;
 
-        recipeIngredients.forEach((ingredient) => {
+        foodIngredients.forEach((ingredient) => {
             const ingredientName =
                 ingredient.translatedName ||
                 ingredient.name ||
@@ -250,29 +259,148 @@ const RecipeSearch = () => {
             }
         });
 
-        const matchRate = (matchedCount / recipeIngredients.length) * 100;
+        const matchRate = (matchedCount / foodIngredients.length) * 100;
         return Math.round(matchRate * 100) / 100;
     };
 
-    const filteredRecipes = recipes
-        .filter(hasAllSelectedIngredients)
-        .map((recipe) => ({
-            ...recipe,
-            matchRate: calculateMatchRate(recipe),
-        }))
-        .sort((a, b) => (b.matchRate || 0) - (a.matchRate || 0));
-
-    const totalPages = Math.ceil(filteredRecipes.length / itemsPerPage);
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const currentRecipes = filteredRecipes.slice(startIndex, endIndex);
-    const hasNextPage = currentPage < totalPages;
-
-    const handleNextPage = () => {
-        if (hasNextPage) {
-            setCurrentPage(currentPage + 1);
+    // 재료가 레시피에 포함되어 있는지 확인 (소스류 제외)
+    const hasAnySelectedIngredient = (recipe: Recipe): boolean => {
+        if (!selectedIngredients || selectedIngredients.length === 0) {
+            return false;
         }
+
+        const recipeIngredients =
+            recipe.translatedIngredients || recipe.ingredients || [];
+
+        if (recipeIngredients.length === 0) {
+            return false;
+        }
+
+        // 소스류를 제외한 실제 음식 재료만 필터링
+        const foodIngredients = recipeIngredients.filter((ingredient) => {
+            const ingredientName =
+                ingredient.translatedName ||
+                ingredient.name ||
+                ingredient.originalName ||
+                '';
+            return !isSauceOrSeasoning(ingredientName);
+        });
+
+        // 선택한 재료 중 하나라도 레시피에 포함되어 있으면 true
+        return selectedIngredients.some((selectedIngredient) => {
+            return foodIngredients.some((ingredient) => {
+                const ingredientName =
+                    ingredient.translatedName ||
+                    ingredient.name ||
+                    ingredient.originalName ||
+                    '';
+                return isIngredientMatched(ingredientName, selectedIngredient);
+            });
+        });
     };
+
+    // 부족한 재료 개수 계산
+    const calculateMissingIngredientCount = (recipe: Recipe): number => {
+        if (!selectedIngredients || selectedIngredients.length === 0) {
+            const recipeIngredients =
+                recipe.translatedIngredients || recipe.ingredients || [];
+            const foodIngredients = recipeIngredients.filter((ingredient) => {
+                const ingredientName =
+                    ingredient.translatedName ||
+                    ingredient.name ||
+                    ingredient.originalName ||
+                    '';
+                return !isSauceOrSeasoning(ingredientName);
+            });
+            return foodIngredients.length;
+        }
+
+        const recipeIngredients =
+            recipe.translatedIngredients || recipe.ingredients || [];
+
+        if (recipeIngredients.length === 0) {
+            return 0;
+        }
+
+        // 소스류를 제외한 실제 음식 재료만 필터링
+        const foodIngredients = recipeIngredients.filter((ingredient) => {
+            const ingredientName =
+                ingredient.translatedName ||
+                ingredient.name ||
+                ingredient.originalName ||
+                '';
+            return !isSauceOrSeasoning(ingredientName);
+        });
+
+        let missingCount = 0;
+
+        foodIngredients.forEach((ingredient) => {
+            const ingredientName =
+                ingredient.translatedName ||
+                ingredient.name ||
+                ingredient.originalName ||
+                '';
+
+            const hasIngredient = selectedIngredients.some((selectedIngredient) => {
+                return isIngredientMatched(ingredientName, selectedIngredient);
+            });
+
+            if (!hasIngredient) {
+                missingCount++;
+            }
+        });
+
+        return missingCount;
+    };
+
+    // 매칭률에 따라 레시피 분류
+    const recipesWithMatchRate = recipes.map((recipe) => ({
+        ...recipe,
+        matchRate: calculateMatchRate(recipe),
+        hasAnyIngredient: hasAnySelectedIngredient(recipe),
+        missingIngredientCount: calculateMissingIngredientCount(recipe),
+    }));
+
+    // 재료 개수에 따라 필터링 전략 변경
+    const ingredientCount = selectedIngredients.length;
+    const isLowIngredientCount = ingredientCount <= 2; // 재료가 2개 이하일 때
+
+    let filteredRecipes: typeof recipesWithMatchRate;
+
+    if (isLowIngredientCount) {
+        // 재료가 적을 때: 포함 여부만 체크 (매칭률 무관)
+        filteredRecipes = recipesWithMatchRate.filter((r) => r.hasAnyIngredient);
+    } else {
+        // 재료가 많을 때: 매칭률 기준으로 필터링
+        filteredRecipes = recipesWithMatchRate.filter((r) => {
+            const rate = r.matchRate || 0;
+            return rate >= 50; // 50% 이상만 표시
+        });
+    }
+
+    // 섹션별로 분류
+    const perfectMatch = filteredRecipes.filter((r) => (r.matchRate || 0) === 100);
+    const highMatch = filteredRecipes.filter((r) => {
+        const rate = r.matchRate || 0;
+        return rate >= 80 && rate < 100;
+    });
+    const mediumMatch = filteredRecipes.filter((r) => {
+        const rate = r.matchRate || 0;
+        if (isLowIngredientCount) {
+            // 재료가 적을 때는 매칭률이 낮아도 포함되면 표시
+            return rate >= 0 && rate < 80;
+        } else {
+            // 재료가 많을 때는 50% 이상만
+            return rate >= 50 && rate < 80;
+        }
+    });
+
+    // 각 섹션 내에서 매칭률 순으로 정렬
+    perfectMatch.sort((a, b) => (b.matchRate || 0) - (a.matchRate || 0));
+    highMatch.sort((a, b) => (b.matchRate || 0) - (a.matchRate || 0));
+    mediumMatch.sort((a, b) => (b.matchRate || 0) - (a.matchRate || 0));
+
+    const allFilteredRecipes = [...perfectMatch, ...highMatch, ...mediumMatch];
 
     const handleRecipeClick = (recipe: Recipe) => {
         // 상태 저장 후 상세 페이지로 이동
@@ -425,56 +553,139 @@ const RecipeSearch = () => {
                     </div>
                 )}
 
-                {!isLoading && filteredRecipes.length > 0 && (
+                {!isLoading && allFilteredRecipes.length > 0 && (
                     <div className="results-section">
                         <h2 className="results-title">
-                            검색 결과 ({filteredRecipes.length}개)
+                            검색 결과 ({allFilteredRecipes.length}개)
                         </h2>
-                        {currentRecipes.map((recipe, index) => (
-                            <div
-                                key={startIndex + index}
-                                className="recipe-card"
-                                onClick={() => handleRecipeClick(recipe)}
-                            >
-                                {recipe.imageUrl && (
-                                    <img
-                                        src={recipe.imageUrl}
-                                        alt={recipe.translatedTitle || recipe.title}
-                                        className="recipe-image"
-                                    />
-                                )}
-                                <div className="recipe-content">
-                                    <h3 className="recipe-title">
-                                        {recipe.translatedTitle || recipe.title}
-                                    </h3>
-                                </div>
+
+                        {/* 지금 바로 만들 수 있어요 (100% 매칭) */}
+                        {perfectMatch.length > 0 && (
+                            <div className="recipe-section">
+                                <h3 className="section-header">
+                                    ✨ 지금 바로 만들 수 있어요 ({perfectMatch.length}개)
+                                </h3>
+                                {perfectMatch.map((recipe, index) => (
+                                    <div
+                                        key={`perfect-${index}`}
+                                        className="recipe-card"
+                                        onClick={() => handleRecipeClick(recipe)}
+                                    >
+                                        {recipe.imageUrl && (
+                                            <img
+                                                src={recipe.imageUrl}
+                                                alt={recipe.translatedTitle || recipe.title}
+                                                className="recipe-image"
+                                            />
+                                        )}
+                                        <div className="recipe-content">
+                                            <div className="recipe-title-row">
+                                                <h3 className="recipe-title">
+                                                    {recipe.translatedTitle || recipe.title}
+                                                </h3>
+                                                <div className="recipe-meta">
+                                                    <span className="match-rate">
+                                                        {Math.round(recipe.matchRate || 0)}%
+                                                    </span>
+                                                    {recipe.missingIngredientCount > 0 && (
+                                                        <span className="missing-count">
+                                                            부족: {recipe.missingIngredientCount}개
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
-                        ))}
-                        {hasNextPage && (
-                            <button className="next-page-button" onClick={handleNextPage}>
-                                다음 페이지 ({currentPage + 1}/{totalPages})
-                                <svg
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                >
-                                    <path d="M9 18l6-6-6-6" />
-                                </svg>
-                            </button>
                         )}
-                        {totalPages > 1 && (
-                            <p className="page-info">
-                                {currentPage} / {totalPages} 페이지
-                            </p>
+
+                        {/* 재료 1-2개만 더 있으면 돼요 (80%+ 매칭) */}
+                        {highMatch.length > 0 && (
+                            <div className="recipe-section">
+                                <h3 className="section-header">
+                                    🛒 재료 1-2개만 더 있으면 돼요 ({highMatch.length}개)
+                                </h3>
+                                {highMatch.map((recipe, index) => (
+                                    <div
+                                        key={`high-${index}`}
+                                        className="recipe-card"
+                                        onClick={() => handleRecipeClick(recipe)}
+                                    >
+                                        {recipe.imageUrl && (
+                                            <img
+                                                src={recipe.imageUrl}
+                                                alt={recipe.translatedTitle || recipe.title}
+                                                className="recipe-image"
+                                            />
+                                        )}
+                                        <div className="recipe-content">
+                                            <div className="recipe-title-row">
+                                                <h3 className="recipe-title">
+                                                    {recipe.translatedTitle || recipe.title}
+                                                </h3>
+                                                <div className="recipe-meta">
+                                                    <span className="match-rate">
+                                                        {Math.round(recipe.matchRate || 0)}%
+                                                    </span>
+                                                    {recipe.missingIngredientCount > 0 && (
+                                                        <span className="missing-count">
+                                                            부족: {recipe.missingIngredientCount}개
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {/* 참고용 레시피 (50%+ 매칭) */}
+                        {mediumMatch.length > 0 && (
+                            <div className="recipe-section">
+                                <h3 className="section-header">
+                                    📋 참고용 레시피 ({mediumMatch.length}개)
+                                </h3>
+                                {mediumMatch.map((recipe, index) => (
+                                    <div
+                                        key={`medium-${index}`}
+                                        className="recipe-card"
+                                        onClick={() => handleRecipeClick(recipe)}
+                                    >
+                                        {recipe.imageUrl && (
+                                            <img
+                                                src={recipe.imageUrl}
+                                                alt={recipe.translatedTitle || recipe.title}
+                                                className="recipe-image"
+                                            />
+                                        )}
+                                        <div className="recipe-content">
+                                            <div className="recipe-title-row">
+                                                <h3 className="recipe-title">
+                                                    {recipe.translatedTitle || recipe.title}
+                                                </h3>
+                                                <div className="recipe-meta">
+                                                    <span className="match-rate">
+                                                        {Math.round(recipe.matchRate || 0)}%
+                                                    </span>
+                                                    {recipe.missingIngredientCount > 0 && (
+                                                        <span className="missing-count">
+                                                            부족: {recipe.missingIngredientCount}개
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         )}
                     </div>
                 )}
 
                 {!isLoading &&
-                    filteredRecipes.length === 0 &&
+                    allFilteredRecipes.length === 0 &&
                     selectedIngredients.length > 0 && (
                         <div className="empty-container">
                             <p className="empty-text">레시피를 찾을 수 없습니다.</p>

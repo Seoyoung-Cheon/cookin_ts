@@ -351,6 +351,37 @@
     }
 }
 
+.recipe-section {
+    margin-bottom: 6vw;
+}
+
+@media (min-width: 600px) {
+    .recipe-section {
+        margin-bottom: 24px;
+    }
+}
+
+.section-header {
+    font-size: 4.5vw;
+    margin-bottom: 3vw;
+    margin-top: 4vw;
+    color: #333;
+    font-family: 'LeeSeoYun', sans-serif;
+    font-weight: bold;
+}
+
+@media (min-width: 600px) {
+    .section-header {
+        font-size: 18px;
+        margin-bottom: 12px;
+        margin-top: 16px;
+    }
+}
+
+.recipe-section:first-of-type .section-header {
+    margin-top: 0;
+}
+
 .recipe-card {
     background-color: #fff;
     border-radius: 2vw;
@@ -397,18 +428,79 @@
     }
 }
 
+.recipe-title-row {
+    display: flex;
+    flex-direction: column;
+    gap: 1vw;
+}
+
+@media (min-width: 600px) {
+    .recipe-title-row {
+        gap: 4px;
+    }
+}
+
 .recipe-content .recipe-title {
     font-size: 4.5vw;
-    margin-bottom: 2vw !important;
+    margin: 0 !important;
     color: #333;
     font-family: 'LeeSeoYun', sans-serif;
     display: block;
+    flex: 1;
 }
 
 @media (min-width: 600px) {
     .recipe-content .recipe-title {
         font-size: 25px;
-        margin-bottom: 8px !important;
+    }
+}
+
+.recipe-meta {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2vw;
+    flex-wrap: wrap;
+}
+
+@media (min-width: 600px) {
+    .recipe-meta {
+        gap: 8px;
+    }
+}
+
+.match-rate {
+    font-size: 3.5vw;
+    color: #ff6b35;
+    font-family: 'LeeSeoYun', sans-serif;
+    font-weight: bold;
+    background-color: #fff3e0;
+    padding: 1vw 2vw;
+    border-radius: 1.5vw;
+}
+
+@media (min-width: 600px) {
+    .match-rate {
+        font-size: 14px;
+        padding: 4px 8px;
+        border-radius: 6px;
+    }
+}
+
+.missing-count {
+    font-size: 3.5vw;
+    color: #f44336;
+    font-family: 'LeeSeoYun', sans-serif;
+    background-color: #ffebee;
+    padding: 1vw 2vw;
+    border-radius: 1.5vw;
+}
+
+@media (min-width: 600px) {
+    .missing-count {
+        font-size: 14px;
+        padding: 4px 8px;
+        border-radius: 6px;
     }
 }
 
