@@ -1,62 +1,176 @@
 .home-container {
-  min-height: 100vh;
-  background-color: #ffe6d8;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
+    min-height: 100vh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    width: 100%;
+    max-width: 90vw;
+    margin: 0 auto;
+    background-image: url('/assets/cookin_bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.home-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 230, 216, 0.7);
+    z-index: 0;
+}
+
+.home-container>* {
+    position: relative;
+    z-index: 1;
+}
+
+@media (min-width: 600px) {
+    .home-container {
+        max-width: 600px;
+    }
 }
 
 .home-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  margin-bottom: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4vw;
+    margin-bottom: 12vw;
+    width: 100%;
+    flex: 1;
 }
 
+@media (min-width: 600px) {
+    .home-content {
+        padding: 16px;
+        margin-bottom: 50px;
+    }
+}
+
+.home-title-rainbow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1vw;
+    padding: 2vw 4vw 0 4vw;
+    margin-top: 2vw;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+}
+
+@media (min-width: 600px) {
+    .home-title-rainbow {
+        gap: 4px;
+        padding: 8px 16px 0 16px;
+    }
+}
+
+.rainbow-letter {
+    font-size: 8vw;
+    font-weight: bold;
+    font-family: 'LeeSeoYun', sans-serif;
+    display: inline-block;
+    position: relative;
+    transition: transform 0.3s ease;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+@media (min-width: 600px) {
+    .rainbow-letter {
+        font-size: 48px;
+    }
+}
+
+.rainbow-letter {
+    color: #61510c;
+}
+
+
+
 .home-logo {
-  width: 100px;
-  height: 100px;
-  margin-bottom: 32px;
-  object-fit: contain;
-  filter: brightness(0) saturate(100%) invert(28%) sepia(8%) saturate(1000%) hue-rotate(315deg) brightness(95%) contrast(88%);
+    width: 25vw;
+    height: 25vw;
+    max-width: 100px;
+    max-height: 100px;
+    margin-bottom: 8vw;
+    object-fit: contain;
+    filter: brightness(0) saturate(100%) invert(28%) sepia(8%) saturate(1000%) hue-rotate(315deg) brightness(95%) contrast(88%);
+}
+
+@media (min-width: 600px) {
+    .home-logo {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 32px;
+    }
 }
 
 .home-title {
-  font-size: 24px;
-  margin-bottom: 32px;
-  text-align: center;
-  color: #56423d;
-  font-family: 'LeeSeoYun', sans-serif;
+    font-size: 6vw;
+    margin-bottom: 8vw;
+    text-align: center;
+    color: #56423d;
+    font-family: 'LeeSeoYun', sans-serif;
+}
+
+@media (min-width: 600px) {
+    .home-title {
+        font-size: 24px;
+        margin-bottom: 32px;
+    }
 }
 
 .home-button {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 8px;
-  background-color: #645559;
-  padding: 16px 32px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  font-family: 'LeeSeoYun', sans-serif;
-  color: #fff;
-  font-size: 16px;
-  transition: opacity 0.2s;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2vw;
+    background-color: #645559;
+    padding: 4vw 8vw;
+    border-radius: 2vw;
+    border: none;
+    cursor: pointer;
+    font-family: 'LeeSeoYun', sans-serif;
+    color: #fff;
+    font-size: 4vw;
+    transition: opacity 0.2s;
+}
+
+@media (min-width: 600px) {
+    .home-button {
+        gap: 8px;
+        padding: 16px 32px;
+        border-radius: 8px;
+        font-size: 1vw;
+    }
 }
 
 .home-button:hover {
-  opacity: 0.9;
+    opacity: 0.9;
 }
 
 .home-button:active {
-  opacity: 0.8;
+    opacity: 0.8;
 }
 
 .home-button-icon {
-  width: 24px;
-  height: 24px;
+    width: 6vw;
+    height: 6vw;
+    max-width: 24px;
+    max-height: 24px;
+}
+
+@media (min-width: 600px) {
+    .home-button-icon {
+        width: 24px;
+        height: 24px;
+    }
 }

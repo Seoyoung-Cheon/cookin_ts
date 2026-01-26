@@ -1,227 +1,462 @@
 .recipe-search-container {
-  min-height: 100vh;
-  background-color: #ffe6d8;
+    min-height: 100vh;
+    position: relative;
+    width: 100%;
+    max-width: 90vw;
+    margin: 0 auto;
+    background-color: #ffe6d8;
+}
+
+.recipe-search-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 230, 216, 0.7);
+    z-index: 0;
+}
+
+.recipe-search-container>* {
+    position: relative;
+    z-index: 1;
+}
+
+@media (min-width: 600px) {
+    .recipe-search-container {
+        max-width: 600px;
+    }
 }
 
 .recipe-search-content {
-  padding: 16px;
+    padding: 4vw;
+}
+
+@media (min-width: 600px) {
+    .recipe-search-content {
+        padding: 16px;
+    }
 }
 
 .input-section {
-  margin-bottom: 24px;
+    margin-bottom: 6vw;
+}
+
+@media (min-width: 600px) {
+    .input-section {
+        margin-bottom: 24px;
+    }
+}
+
+.toggle-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2vw;
+    margin-bottom: 4vw;
+}
+
+@media (min-width: 600px) {
+    .toggle-wrapper {
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+}
+
+.back-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 10vw;
+    height: 10vw;
+    max-width: 48px;
+    max-height: 48px;
+    min-width: 48px;
+    min-height: 48px;
+    background-color: #645559;
+    border: none;
+    border-radius: 2vw;
+    cursor: pointer;
+    color: #fff;
+    transition: opacity 0.2s;
+    flex-shrink: 0;
+}
+
+@media (min-width: 600px) {
+    .back-button {
+        width: 48px;
+        height: 48px;
+        border-radius: 8px;
+    }
+}
+
+.back-button:hover {
+    opacity: 0.9;
+}
+
+.back-button:active {
+    opacity: 0.8;
+}
+
+.back-button svg {
+    width: 6vw;
+    height: 6vw;
+    max-width: 24px;
+    max-height: 24px;
+}
+
+@media (min-width: 600px) {
+    .back-button svg {
+        width: 24px;
+        height: 24px;
+    }
 }
 
 .toggle-container {
-  display: flex;
-  flex-direction: row;
-  margin-bottom: 16px;
-  background-color: #fff;
-  border-radius: 8px;
-  padding: 4px;
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    background-color: #fff;
+    border-radius: 2vw;
+    padding: 1vw;
+}
+
+@media (min-width: 600px) {
+    .toggle-container {
+        border-radius: 8px;
+        padding: 4px;
+    }
 }
 
 .toggle-button {
-  flex: 1;
-  padding: 12px 16px;
-  border-radius: 6px;
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
-  text-align: center;
-  font-family: 'LeeSeoYun', sans-serif;
-  font-size: 16px;
-  color: #666;
-  transition: all 0.2s;
+    flex: 1;
+    padding: 3vw 4vw;
+    border-radius: 1.5vw;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    text-align: center;
+    font-family: 'LeeSeoYun', sans-serif;
+    font-size: 4vw;
+    color: #666;
+    transition: all 0.2s;
+}
+
+@media (min-width: 600px) {
+    .toggle-button {
+        padding: 12px 16px;
+        border-radius: 6px;
+        font-size: 16px;
+    }
 }
 
 .toggle-button-active {
-  background-color: #645559;
-  color: #fff;
+    background-color: #645559;
+    color: #fff;
 }
 
 .section-title {
-  font-size: 18px;
-  margin-bottom: 12px;
-  color: #333;
-  font-family: 'LeeSeoYun', sans-serif;
+    font-size: 4.5vw;
+    margin-bottom: 3vw;
+    color: #333;
+    font-family: 'LeeSeoYun', sans-serif;
+}
+
+@media (min-width: 600px) {
+    .section-title {
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
 }
 
 .input-row {
-  display: flex;
-  flex-direction: row;
-  margin-bottom: 12px;
-  gap: 8px;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 3vw;
+    gap: 2vw;
+}
+
+@media (min-width: 600px) {
+    .input-row {
+        margin-bottom: 12px;
+        gap: 8px;
+    }
 }
 
 .add-button {
-  background-color: #645559;
-  border-radius: 8px;
-  padding: 12px;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 0.2s;
+    background-color: #645559;
+    border-radius: 2vw;
+    padding: 3vw;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s;
+}
+
+@media (min-width: 600px) {
+    .add-button {
+        border-radius: 8px;
+        padding: 12px;
+    }
 }
 
 .add-button:hover {
-  opacity: 0.9;
+    opacity: 0.9;
 }
 
 .add-button-icon {
-  width: 24px;
-  height: 24px;
-  color: #fff;
+    width: 6vw;
+    height: 6vw;
+    max-width: 24px;
+    max-height: 24px;
+    color: #fff;
+}
+
+@media (min-width: 600px) {
+    .add-button-icon {
+        width: 24px;
+        height: 24px;
+    }
 }
 
 .label {
-  font-size: 14px;
-  margin-top: 12px;
-  margin-bottom: 8px;
-  color: #333;
-  font-family: 'LeeSeoYun', sans-serif;
+    font-size: 3.5vw;
+    margin-top: 3vw;
+    margin-bottom: 2vw;
+    color: #333;
+    font-family: 'LeeSeoYun', sans-serif;
+}
+
+@media (min-width: 600px) {
+    .label {
+        font-size: 14px;
+        margin-top: 12px;
+        margin-bottom: 8px;
+    }
 }
 
 .chip-container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  margin-bottom: 16px;
-  gap: 8px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-bottom: 4vw;
+    gap: 2vw;
+}
+
+@media (min-width: 600px) {
+    .chip-container {
+        margin-bottom: 16px;
+        gap: 8px;
+    }
 }
 
 .chip {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 4px;
-  background-color: #fff3e0;
-  padding: 6px 12px;
-  border-radius: 16px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1vw;
+    background-color: #fff3e0;
+    padding: 1.5vw 3vw;
+    border-radius: 4vw;
+}
+
+@media (min-width: 600px) {
+    .chip {
+        gap: 4px;
+        padding: 6px 12px;
+        border-radius: 16px;
+    }
 }
 
 .chip-text {
-  font-size: 14px;
-  color: #333;
-  font-family: 'LeeSeoYun', sans-serif;
+    font-size: 3.5vw;
+    color: #333;
+    font-family: 'LeeSeoYun', sans-serif;
+}
+
+@media (min-width: 600px) {
+    .chip-text {
+        font-size: 14px;
+    }
 }
 
 .chip-close {
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  color: #666;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: #666;
 }
 
 .search-button {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  background-color: #645559;
-  padding: 16px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  font-family: 'LeeSeoYun', sans-serif;
-  color: #fff;
-  font-size: 16px;
-  margin-top: 8px;
-  transition: opacity 0.2s;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 2vw;
+    background-color: #645559;
+    padding: 4vw;
+    border-radius: 2vw;
+    border: none;
+    cursor: pointer;
+    font-family: 'LeeSeoYun', sans-serif;
+    color: #fff;
+    font-size: 4vw;
+    margin-top: 2vw;
+    transition: opacity 0.2s;
+}
+
+@media (min-width: 600px) {
+    .search-button {
+        gap: 8px;
+        padding: 16px;
+        border-radius: 8px;
+        font-size: 16px;
+        margin-top: 8px;
+    }
 }
 
 .search-button:hover:not(:disabled) {
-  opacity: 0.9;
+    opacity: 0.9;
 }
 
 .search-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 .results-section {
-  margin-top: 24px;
+    margin-top: 6vw;
+}
+
+@media (min-width: 600px) {
+    .results-section {
+        margin-top: 24px;
+    }
 }
 
 .results-title {
-  font-size: 20px;
-  margin-bottom: 16px;
-  color: #333;
-  font-family: 'LeeSeoYun', sans-serif;
+    font-size: 5vw;
+    margin-bottom: 4vw;
+    color: #333;
+    font-family: 'LeeSeoYun', sans-serif;
+}
+
+@media (min-width: 600px) {
+    .results-title {
+        font-size: 20px;
+        margin-bottom: 16px;
+    }
 }
 
 .recipe-card {
-  background-color: #fff;
-  border-radius: 8px;
-  margin-bottom: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+    background-color: #fff;
+    border-radius: 2vw;
+    margin-bottom: 3vw;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+@media (min-width: 600px) {
+    .recipe-card {
+        border-radius: 8px;
+        margin-bottom: 12px;
+    }
 }
 
 .recipe-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .recipe-image {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  background-color: #f0f0f0;
+    width: 100%;
+    height: 50vw;
+    max-height: 200px;
+    object-fit: cover;
+    background-color: #f0f0f0;
+}
+
+@media (min-width: 600px) {
+    .recipe-image {
+        height: 200px;
+    }
 }
 
 .recipe-content {
-  padding: 16px;
+    padding: 4vw;
 }
 
-.recipe-title {
-  font-size: 18px;
-  margin-bottom: 8px;
-  color: #333;
-  font-family: 'LeeSeoYun', sans-serif;
+@media (min-width: 600px) {
+    .recipe-content {
+        padding: 16px;
+    }
 }
 
-.recipe-description {
-  font-size: 14px;
-  color: #666;
-  font-family: 'LeeSeoYun', sans-serif;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+.recipe-content .recipe-title {
+    font-size: 4.5vw;
+    margin-bottom: 2vw !important;
+    color: #333;
+    font-family: 'LeeSeoYun', sans-serif;
+    display: block;
+}
+
+@media (min-width: 600px) {
+    .recipe-content .recipe-title {
+        font-size: 25px;
+        margin-bottom: 8px !important;
+    }
 }
 
 .next-page-button {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  background-color: #ff6b35;
-  padding: 14px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  font-family: 'LeeSeoYun', sans-serif;
-  color: #fff;
-  font-size: 16px;
-  margin-top: 16px;
-  margin-bottom: 8px;
-  transition: opacity 0.2s;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 2vw;
+    background-color: #ff6b35;
+    padding: 3.5vw;
+    border-radius: 2vw;
+    border: none;
+    cursor: pointer;
+    font-family: 'LeeSeoYun', sans-serif;
+    color: #fff;
+    font-size: 4vw;
+    margin-top: 4vw;
+    margin-bottom: 2vw;
+    transition: opacity 0.2s;
+}
+
+@media (min-width: 600px) {
+    .next-page-button {
+        gap: 8px;
+        padding: 14px;
+        border-radius: 8px;
+        font-size: 16px;
+        margin-top: 16px;
+        margin-bottom: 8px;
+    }
 }
 
 .next-page-button:hover {
-  opacity: 0.9;
+    opacity: 0.9;
 }
 
 .page-info {
-  text-align: center;
-  font-size: 14px;
-  color: #666;
-  margin-top: 8px;
-  font-family: 'LeeSeoYun', sans-serif;
+    text-align: center;
+    font-size: 3.5vw;
+    color: #666;
+    margin-top: 2vw;
+    font-family: 'LeeSeoYun', sans-serif;
+}
+
+@media (min-width: 600px) {
+    .page-info {
+        font-size: 14px;
+        margin-top: 8px;
+    }
 }
