@@ -1,11 +1,6 @@
-// API 상수
+// 백엔드 API URL (환경 변수 또는 기본값 사용)
 export const ApiConstants = {
-  spoonacularApiKey: "1e28f8392f6941e2b87c1b0500abdb3a",
-  spoonacularBaseUrl: "https://api.spoonacular.com",
-  mealDbBaseUrl: "https://www.themealdb.com/api/json/v1/1",
-  // 한식 API (식품안전나라)
-  koreanRecipeApiKey: "e47eff77206045f98e2f",
-  koreanRecipeBaseUrl: "https://openapi.foodsafetykorea.go.kr/api",
+  backendBaseUrl: import.meta.env.VITE_BACKEND_URL || "http://localhost:3001",
 };
 
 // 앱 색상

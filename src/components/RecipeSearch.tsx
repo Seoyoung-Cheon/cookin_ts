@@ -21,6 +21,7 @@ const RecipeSearch = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [recipeType, setRecipeType] = useState<RecipeType>('korean');
     const [currentPage, setCurrentPage] = useState(1);
+    const [isHardSectionExpanded, setIsHardSectionExpanded] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
     const isRestoredRef = useRef(false);
 
@@ -361,6 +362,7 @@ const RecipeSearch = () => {
         missingIngredientCount: calculateMissingIngredientCount(recipe),
     }));
 
+    // OR 검색: 선택한 재료 중 하나라도 포함된 레시피만 표시
     // 재료 개수에 따라 필터링 전략 변경
     const ingredientCount = selectedIngredients.length;
     const isLowIngredientCount = ingredientCount <= 2; // 재료가 2개 이하일 때
@@ -368,39 +370,29 @@ const RecipeSearch = () => {
     let filteredRecipes: typeof recipesWithMatchRate;
 
     if (isLowIngredientCount) {
-        // 재료가 적을 때: 포함 여부만 체크 (매칭률 무관)
+        // 재료가 적을 때: OR 검색 (선택한 재료 중 하나라도 포함되면 표시)
         filteredRecipes = recipesWithMatchRate.filter((r) => r.hasAnyIngredient);
     } else {
-        // 재료가 많을 때: 매칭률 기준으로 필터링
+        // 재료가 많을 때: OR 검색 + 매칭률 기준 필터링
+        // 선택한 재료 중 하나라도 포함되고, 매칭률이 50% 이상인 레시피만 표시
         filteredRecipes = recipesWithMatchRate.filter((r) => {
-            const rate = r.matchRate || 0;
-            return rate >= 50; // 50% 이상만 표시
+            return r.hasAnyIngredient && (r.matchRate || 0) >= 50;
         });
     }
 
-    // 섹션별로 분류
-    const perfectMatch = filteredRecipes.filter((r) => (r.matchRate || 0) === 100);
-    const highMatch = filteredRecipes.filter((r) => {
-        const rate = r.matchRate || 0;
-        return rate >= 80 && rate < 100;
-    });
-    const mediumMatch = filteredRecipes.filter((r) => {
-        const rate = r.matchRate || 0;
-        if (isLowIngredientCount) {
-            // 재료가 적을 때는 매칭률이 낮아도 포함되면 표시
-            return rate >= 0 && rate < 80;
-        } else {
-            // 재료가 많을 때는 50% 이상만
-            return rate >= 50 && rate < 80;
-        }
-    });
+    // 부족한 재료 개수 기준으로 섹션별 분류
+    const availableNow = filteredRecipes.filter((r) => r.missingIngredientCount === 0);
+    const needFewIngredients = filteredRecipes.filter(
+        (r) => r.missingIngredientCount >= 1 && r.missingIngredientCount <= 2
+    );
+    const needManyIngredients = filteredRecipes.filter((r) => r.missingIngredientCount >= 3);
 
-    // 각 섹션 내에서 매칭률 순으로 정렬
-    perfectMatch.sort((a, b) => (b.matchRate || 0) - (a.matchRate || 0));
-    highMatch.sort((a, b) => (b.matchRate || 0) - (a.matchRate || 0));
-    mediumMatch.sort((a, b) => (b.matchRate || 0) - (a.matchRate || 0));
+    // 각 섹션 내에서 부족한 재료 개수 순으로 정렬 (적은 순서대로)
+    availableNow.sort((a, b) => a.missingIngredientCount - b.missingIngredientCount);
+    needFewIngredients.sort((a, b) => a.missingIngredientCount - b.missingIngredientCount);
+    needManyIngredients.sort((a, b) => a.missingIngredientCount - b.missingIngredientCount);
 
-    const allFilteredRecipes = [...perfectMatch, ...highMatch, ...mediumMatch];
+    const allFilteredRecipes = [...availableNow, ...needFewIngredients, ...needManyIngredients];
 
     const handleRecipeClick = (recipe: Recipe) => {
         // 상태 저장 후 상세 페이지로 이동
@@ -555,19 +547,51 @@ const RecipeSearch = () => {
 
                 {!isLoading && allFilteredRecipes.length > 0 && (
                     <div className="results-section">
-                        <h2 className="results-title">
-                            검색 결과 ({allFilteredRecipes.length}개)
-                        </h2>
-
-                        {/* 지금 바로 만들 수 있어요 (100% 매칭) */}
-                        {perfectMatch.length > 0 && (
+                        {/* 지금 만들 수 있어요 👍 */}
+                        {availableNow.length > 0 && (
                             <div className="recipe-section">
                                 <h3 className="section-header">
-                                    ✨ 지금 바로 만들 수 있어요 ({perfectMatch.length}개)
+                                    지금 만들 수 있어요 👍 ({availableNow.length}개)
                                 </h3>
-                                {perfectMatch.map((recipe, index) => (
+                                {availableNow.map((recipe, index) => (
                                     <div
-                                        key={`perfect-${index}`}
+                                        key={`available-${index}`}
+                                        className="recipe-card"
+                                        onClick={() => handleRecipeClick(recipe)}
+                                    >
+                                        {recipe.imageUrl && (
+                                            <img
+                                                src={recipe.imageUrl}
+                                                alt={recipe.translatedTitle || recipe.title}
+                                                className="recipe-image"
+                                            />
+                                        )}
+                                        <div className="recipe-content">
+                                            <div className="recipe-title-row">
+                                                <h3 className="recipe-title">
+                                                    {recipe.translatedTitle || recipe.title}
+                                                </h3>
+                                                <div className="recipe-meta">
+                                                    <span className="match-rate">
+                                                        {Math.round(recipe.matchRate || 0)}%
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {/* 재료 1~2개만 추가하면 가능해요 🛒 */}
+                        {needFewIngredients.length > 0 && (
+                            <div className="recipe-section">
+                                <h3 className="section-header">
+                                    재료 1~2개만 추가하면 가능해요 🛒 ({needFewIngredients.length}개)
+                                </h3>
+                                {needFewIngredients.map((recipe, index) => (
+                                    <div
+                                        key={`few-${index}`}
                                         className="recipe-card"
                                         onClick={() => handleRecipeClick(recipe)}
                                     >
@@ -600,85 +624,64 @@ const RecipeSearch = () => {
                             </div>
                         )}
 
-                        {/* 재료 1-2개만 더 있으면 돼요 (80%+ 매칭) */}
-                        {highMatch.length > 0 && (
+                        {/* 이번엔 어려워요 😅 */}
+                        {needManyIngredients.length > 0 && (
                             <div className="recipe-section">
-                                <h3 className="section-header">
-                                    🛒 재료 1-2개만 더 있으면 돼요 ({highMatch.length}개)
-                                </h3>
-                                {highMatch.map((recipe, index) => (
-                                    <div
-                                        key={`high-${index}`}
-                                        className="recipe-card"
-                                        onClick={() => handleRecipeClick(recipe)}
+                                <button
+                                    className="section-header-toggle"
+                                    onClick={() => setIsHardSectionExpanded(!isHardSectionExpanded)}
+                                >
+                                    <h3 className="section-header">
+                                        이번엔 어려워요 😅 ({needManyIngredients.length}개)
+                                    </h3>
+                                    <svg
+                                        className={`expand-icon ${isHardSectionExpanded ? 'expanded' : ''}`}
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
                                     >
-                                        {recipe.imageUrl && (
-                                            <img
-                                                src={recipe.imageUrl}
-                                                alt={recipe.translatedTitle || recipe.title}
-                                                className="recipe-image"
-                                            />
-                                        )}
-                                        <div className="recipe-content">
-                                            <div className="recipe-title-row">
-                                                <h3 className="recipe-title">
-                                                    {recipe.translatedTitle || recipe.title}
-                                                </h3>
-                                                <div className="recipe-meta">
-                                                    <span className="match-rate">
-                                                        {Math.round(recipe.matchRate || 0)}%
-                                                    </span>
-                                                    {recipe.missingIngredientCount > 0 && (
-                                                        <span className="missing-count">
-                                                            부족: {recipe.missingIngredientCount}개
-                                                        </span>
-                                                    )}
+                                        <path d="M6 9l6 6 6-6" />
+                                    </svg>
+                                </button>
+                                {isHardSectionExpanded && (
+                                    <div className="hard-recipes-list">
+                                        {needManyIngredients.map((recipe, index) => (
+                                            <div
+                                                key={`many-${index}`}
+                                                className="recipe-card"
+                                                onClick={() => handleRecipeClick(recipe)}
+                                            >
+                                                {recipe.imageUrl && (
+                                                    <img
+                                                        src={recipe.imageUrl}
+                                                        alt={recipe.translatedTitle || recipe.title}
+                                                        className="recipe-image"
+                                                    />
+                                                )}
+                                                <div className="recipe-content">
+                                                    <div className="recipe-title-row">
+                                                        <h3 className="recipe-title">
+                                                            {recipe.translatedTitle || recipe.title}
+                                                        </h3>
+                                                        <div className="recipe-meta">
+                                                            <span className="match-rate">
+                                                                {Math.round(recipe.matchRate || 0)}%
+                                                            </span>
+                                                            {recipe.missingIngredientCount > 0 && (
+                                                                <span className="missing-count">
+                                                                    부족: {recipe.missingIngredientCount}개
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        ))}
                                     </div>
-                                ))}
-                            </div>
-                        )}
-
-                        {/* 참고용 레시피 (50%+ 매칭) */}
-                        {mediumMatch.length > 0 && (
-                            <div className="recipe-section">
-                                <h3 className="section-header">
-                                    📋 참고용 레시피 ({mediumMatch.length}개)
-                                </h3>
-                                {mediumMatch.map((recipe, index) => (
-                                    <div
-                                        key={`medium-${index}`}
-                                        className="recipe-card"
-                                        onClick={() => handleRecipeClick(recipe)}
-                                    >
-                                        {recipe.imageUrl && (
-                                            <img
-                                                src={recipe.imageUrl}
-                                                alt={recipe.translatedTitle || recipe.title}
-                                                className="recipe-image"
-                                            />
-                                        )}
-                                        <div className="recipe-content">
-                                            <div className="recipe-title-row">
-                                                <h3 className="recipe-title">
-                                                    {recipe.translatedTitle || recipe.title}
-                                                </h3>
-                                                <div className="recipe-meta">
-                                                    <span className="match-rate">
-                                                        {Math.round(recipe.matchRate || 0)}%
-                                                    </span>
-                                                    {recipe.missingIngredientCount > 0 && (
-                                                        <span className="missing-count">
-                                                            부족: {recipe.missingIngredientCount}개
-                                                        </span>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
+                                )}
                             </div>
                         )}
                     </div>

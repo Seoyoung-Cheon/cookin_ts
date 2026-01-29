@@ -12,12 +12,7 @@ const Home = () => {
     return (
         <div className="home-container">
             <div className="home-title-rainbow">
-                <span className="rainbow-letter" style={{ '--index': 0 } as React.CSSProperties}>C</span>
-                <span className="rainbow-letter" style={{ '--index': 1 } as React.CSSProperties}>O</span>
-                <span className="rainbow-letter" style={{ '--index': 2 } as React.CSSProperties}>O</span>
-                <span className="rainbow-letter" style={{ '--index': 3 } as React.CSSProperties}>K</span>
-                <span className="rainbow-letter" style={{ '--index': 4 } as React.CSSProperties}>I</span>
-                <span className="rainbow-letter" style={{ '--index': 5 } as React.CSSProperties}>N</span>
+                <h1 className="home-title">COOKIN</h1>
             </div>
             <div className="home-content">
                 <img src={logoImage} alt="COOKIN Logo" className="home-logo" />
