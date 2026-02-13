@@ -1,6 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import '../styles/home.css';
-import logoImage from '/assets/logo (3).png';
+
+const base = (import.meta.env.BASE_URL || '/').replace(/\/?$/, '') || '';
+const SLIDE_IMAGES = ['bg1.png', 'bg2.png', 'bg3.png', 'bg4.png'].map(
+    (name) => `${base}/assets/${name}`
+);
 
 const Home = () => {
     const navigate = useNavigate();
@@ -11,17 +15,38 @@ const Home = () => {
 
     return (
         <div className="home-container">
-            <div className="home-title-rainbow">
-                <h1 className="home-title">COOKIN</h1>
-            </div>
-            <div className="home-content">
-                <img src={logoImage} alt="COOKIN Logo" className="home-logo" />
-                <h1 className="home-title">COOKIN에 오신 것을 환영합니다</h1>
-                <button className="home-button" onClick={handleCookPress}>
-
+            <header className="home-header">
+                <span className="home-brand">COOKIN</span>
+                <button className="home-cta" onClick={handleCookPress}>
                     요리하기
                 </button>
-            </div>
+            </header>
+
+            <section className="home-hero">
+                <div className="home-hero-wrap">
+                    {SLIDE_IMAGES.map((src, i) => (
+                        <div
+                            key={src}
+                            className="home-hero-layer"
+                            style={{
+                                backgroundImage: `url(${src})`,
+                                animationDelay: `${i * 5}s`,
+                            }}
+                        />
+                    ))}
+                </div>
+                <div className="home-hero-overlay" />
+                <div className="home-hero-shapes">
+                    <div className="home-shape home-shape--tl" />
+                    <div className="home-shape home-shape--tr" />
+                    <div className="home-shape home-shape--br" />
+                </div>
+                
+            </section>
+
+            <section className="home-tagline">
+                <h1 className="home-tagline-text">당신의 레시피를 찾아보세요!</h1>
+            </section>
         </div>
     );
 };

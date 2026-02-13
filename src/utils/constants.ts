@@ -1,6 +1,11 @@
-// 백엔드 API URL (환경 변수 또는 기본값 사용)
+// 외부 API 설정 (프론트에서 직접 호출)
 export const ApiConstants = {
-  backendBaseUrl: import.meta.env.VITE_BACKEND_URL || "http://localhost:3001",
+  spoonacularBaseUrl: "https://api.spoonacular.com",
+  spoonacularApiKey:
+    import.meta.env.VITE_SPOONACULAR_API_KEY || "",
+  koreanRecipeBaseUrl: "https://openapi.foodsafetykorea.go.kr/api",
+  koreanRecipeApiKey:
+    import.meta.env.VITE_KOREAN_RECIPE_API_KEY || "",
 };
 
 // 앱 색상

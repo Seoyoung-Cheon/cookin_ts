@@ -449,9 +449,16 @@ const RecipeSearch = () => {
                             </button>
                         </div>
                     </div>
-                    <h2 className="section-title">
-                        음식 재료를 입력하세요({recipeType === 'korean' ? '한식' : '양식'})
-                    </h2>
+                    <div className="section-title-row">
+                        <h2 className="section-title">
+                            음식 재료를 입력하세요({recipeType === 'korean' ? '한식' : '양식'})
+                        </h2>
+                        {recipeType === 'western' && (
+                            <span className="section-title-note">
+                                양식은 번역 과정 때문에 로딩 시간이 오래 걸릴 수 있어요
+                            </span>
+                        )}
+                    </div>
                     <div className="input-row">
                         <input
                             ref={inputRef}
@@ -540,7 +547,29 @@ const RecipeSearch = () => {
 
                 {isLoading && (
                     <div className="loading-container">
-                        <div>로딩 중...</div>
+                        <div className="capybaraloader">
+                            <div className="capybara">
+                                <div className="capyhead">
+                                    <div className="capyear">
+                                        <div className="capyear2"></div>
+                                    </div>
+                                    <div className="capyear"></div>
+                                    <div className="capymouth">
+                                        <div className="capylips"></div>
+                                        <div className="capylips"></div>
+                                    </div>
+                                    <div className="capyeye"></div>
+                                    <div className="capyeye"></div>
+                                </div>
+                                <div className="capyleg"></div>
+                                <div className="capyleg2"></div>
+                                <div className="capyleg2"></div>
+                                <div className="capy"></div>
+                            </div>
+                            <div className="loader">
+                                <div className="loaderline"></div>
+                            </div>
+                        </div>
                         <p className="loading-text">레시피를 찾고 있어요...</p>
                     </div>
                 )}

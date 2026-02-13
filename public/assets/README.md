@@ -10,6 +10,11 @@
    - 원본 위치: `c:\Cookin2\recipe_app\assets\logo (3).png`
    - 복사 위치: `public/assets/logo (3).png`
 
+3. **1.jpg ~ 4.jpg** - 메인 화면 배경 슬라이드 (선택)
+   - 메인 화면 가운데에서 천천히 전환·루프되는 배경 이미지 4장
+   - 복사 위치: `public/assets/1.jpg`, `2.jpg`, `3.jpg`, `4.jpg`
+   - 없으면 해당 영역만 비어 보일 수 있음
+
 ## 복사 방법
 
 Windows PowerShell에서:

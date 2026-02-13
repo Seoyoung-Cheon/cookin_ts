@@ -1,176 +1,255 @@
+/* 웹 레이아웃 - 전체 배경 #CB8329, 그 위에 사진 */
 .home-container {
     min-height: 100vh;
-    position: relative;
     display: flex;
     flex-direction: column;
-    padding: 0;
     width: 100%;
-    max-width: 90vw;
-    margin: 0 auto;
-    background-image: url('/assets/cookin_bg.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    margin: 0;
+    background-color: #CB8329;
 }
 
-.home-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(255, 230, 216, 0.7);
-    z-index: 0;
-}
-
-.home-container>* {
-    position: relative;
-    z-index: 1;
-}
-
-@media (min-width: 600px) {
-    .home-container {
-        max-width: 600px;
-    }
-}
-
-.home-content {
+/* 헤더: 좌 COOKIN, 우 요리하기 */
+.home-header {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 4vw;
-    margin-bottom: 12vw;
-    width: 100%;
-    flex: 1;
-}
-
-@media (min-width: 600px) {
-    .home-content {
-        padding: 16px;
-        margin-bottom: 50px;
-    }
-}
-
-.home-title-rainbow {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1vw;
-    padding: 2vw 4vw 0 4vw;
-    margin-top: 2vw;
-    width: 100%;
-    position: relative;
-    z-index: 1;
+    justify-content: space-between;
+    padding: 1rem 2.5rem;
+    background-color: #CB8329;
     flex-shrink: 0;
 }
 
-@media (min-width: 600px) {
-    .home-title-rainbow {
-        gap: 4px;
-        padding: 8px 16px 0 16px;
-    }
-}
-
-.rainbow-letter {
-    font-size: 8vw;
+.home-brand {
+    font-size: 1.5rem;
     font-weight: bold;
+    color: #f5f0e8;
     font-family: 'LeeSeoYun', sans-serif;
-    display: inline-block;
-    position: relative;
-    transition: transform 0.3s ease;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    letter-spacing: 0.05em;
 }
 
-@media (min-width: 600px) {
-    .rainbow-letter {
-        font-size: 48px;
-    }
-}
-
-.rainbow-letter {
-    color: #61510c;
-}
-
-
-
-.home-logo {
-    width: 25vw;
-    height: 25vw;
-    max-width: 100px;
-    max-height: 100px;
-    margin-bottom: 8vw;
-    object-fit: contain;
-    filter: brightness(0) saturate(100%) invert(28%) sepia(8%) saturate(1000%) hue-rotate(315deg) brightness(95%) contrast(88%);
-}
-
-@media (min-width: 600px) {
-    .home-logo {
-        width: 100px;
-        height: 100px;
-        margin-bottom: 32px;
-    }
-}
-
-.home-title {
-    font-size: 6vw;
-    margin-bottom: 8vw;
-    text-align: center;
-    color: #56423d;
+.home-cta {
+    padding: 0.6rem 1.25rem;
+    background: transparent;
+    border: 2px solid #f5f0e8;
+    border-radius: 4px;
+    color: #f5f0e8;
     font-family: 'LeeSeoYun', sans-serif;
-}
-
-@media (min-width: 600px) {
-    .home-title {
-        font-size: 24px;
-        margin-bottom: 32px;
-    }
-}
-
-.home-button {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 2vw;
-    background-color: #645559;
-    padding: 4vw 8vw;
-    border-radius: 2vw;
-    border: none;
+    font-size: 0.9rem;
     cursor: pointer;
-    font-family: 'LeeSeoYun', sans-serif;
-    color: #fff;
-    font-size: 4vw;
-    transition: opacity 0.2s;
+    transition: background 0.2s, color 0.2s;
 }
 
-@media (min-width: 600px) {
-    .home-button {
-        gap: 8px;
-        padding: 16px 32px;
-        border-radius: 8px;
-        font-size: 1vw;
+.home-cta:hover {
+    background: #f5f0e8;
+    color: #56423d;
+}
+
+/* 히어로: 전체 배경 위에 사진 블록을 얹는 구조 */
+.home-hero {
+    position: relative;
+    flex: 1;
+    min-height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    overflow: hidden;
+}
+
+/* 배경 사진 래퍼 - 이미지가 전환되는 영역 */
+.home-hero-wrap {
+    position: absolute;
+    top: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    max-width: 600px;
+    bottom: 2rem;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+}
+
+.home-hero-layer {
+    position: absolute;
+    inset: 0;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 8px;
+    opacity: 0;
+    animation: home-bg-cycle 20s ease-in-out infinite;
+}
+
+/* 20s 한 사이클, 4장이 5s 간격으로 순서대로 등장·퇴장 (루프) */
+@keyframes home-bg-cycle {
+    0% {
+        opacity: 0;
+    }
+
+    3% {
+        opacity: 1;
+    }
+
+    22% {
+        opacity: 1;
+    }
+
+    25% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 0;
     }
 }
 
-.home-button:hover {
-    opacity: 0.9;
+.home-hero-overlay {
+    position: absolute;
+    top: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    max-width: 600px;
+    bottom: 2rem;
+    background-color: rgba(255, 230, 216, 0.5);
+    pointer-events: none;
+    border-radius: 8px;
 }
 
-.home-button:active {
-    opacity: 0.8;
+/* 기하학적 오버레이 - 사진 블록 위에 맞춤 */
+.home-hero-shapes {
+    position: absolute;
+    top: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    max-width: 600px;
+    bottom: 2rem;
+    pointer-events: none;
+    z-index: 1;
+    border-radius: 8px;
 }
 
-.home-button-icon {
-    width: 6vw;
-    height: 6vw;
-    max-width: 24px;
-    max-height: 24px;
+
+
+.home-shape--tl {
+    top: 0;
+    left: 0;
+    border-width: 0 0 120px 120px;
+    border-bottom-color: #f5f0e8;
+    border-left-color: transparent;
 }
 
-@media (min-width: 600px) {
-    .home-button-icon {
-        width: 24px;
-        height: 24px;
+.home-shape--tr {
+    top: 0;
+    right: 0;
+    border-width: 0 120px 100px 0;
+    border-right-color: #f5f0e8;
+    border-bottom-color: transparent;
+}
+
+.home-shape--br {
+    bottom: 0;
+    right: 0;
+    border-width: 80px 100px 0 0;
+    border-top-color: #f5f0e8;
+    border-right-color: transparent;
+}
+
+
+/* 하단 태그라인 */
+.home-tagline {
+    padding: 2.5rem 2rem;
+    background-color: #CB8329;
+    text-align: center;
+}
+
+.home-tagline-text {
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    color: #f5f0e8;
+    font-family: 'LeeSeoYun', sans-serif;
+    font-weight: normal;
+    margin: 0;
+    letter-spacing: 0.02em;
+}
+
+/* 모바일에서도 웹 느낌 유지, 단 좁을 땐 패딩만 조정 */
+@media (max-width: 768px) {
+    .home-header {
+        padding: 0.875rem 1.25rem;
+    }
+
+    .home-brand {
+        font-size: 1.25rem;
+    }
+
+    .home-cta {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+    }
+
+    .home-hero {
+        min-height: 45vh;
+        padding: 1rem;
+    }
+
+    .home-hero-wrap {
+        top: 1rem;
+        bottom: 1rem;
+        width: 80%;
+        max-width: none;
+    }
+
+    .home-hero-overlay,
+    .home-hero-shapes {
+        top: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        right: auto;
+        bottom: 1rem;
+    }
+
+    .home-shape--tl {
+        border-width: 0 0 80px 80px;
+    }
+
+    .home-shape--tr {
+        border-width: 0 80px 70px 0;
+    }
+
+    .home-shape--br {
+        border-width: 50px 70px 0 0;
+    }
+
+    .home-eyes {
+        gap: 1.5rem;
+    }
+
+    .home-eye {
+        width: 44px;
+        height: 44px;
+    }
+
+    .home-eye::after {
+        width: 34px;
+        height: 34px;
+        top: 8px;
+        left: 10px;
+    }
+
+    .home-mouth {
+        width: 56px;
+        height: 28px;
+    }
+
+    .home-tongue {
+        width: 18px;
+        height: 18px;
+        bottom: -14px;
+    }
+
+    .home-tagline {
+        padding: 1.5rem 1rem;
     }
 }
