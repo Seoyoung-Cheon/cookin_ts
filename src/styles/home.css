@@ -25,21 +25,105 @@
     letter-spacing: 0.05em;
 }
 
-.home-cta {
-    padding: 0.6rem 1.25rem;
-    background: transparent;
-    border: 2px solid #f5f0e8;
-    border-radius: 4px;
-    color: #f5f0e8;
-    font-family: 'LeeSeoYun', sans-serif;
-    font-size: 0.9rem;
+/* 요리하기 버튼 - Uiverse 스타일 (애니메이션 + 네온 섀도우) */
+.home-cta-wrap {
+    position: relative;
+    display: inline-block;
     cursor: pointer;
-    transition: background 0.2s, color 0.2s;
+    border: none;
+    background: none;
+    padding: 0;
+    font-family: 'LeeSeoYun', sans-serif;
 }
 
-.home-cta:hover {
+.home-cta-inner {
+    position: relative;
+    display: block;
+    padding: 1rem 2rem;
+    border: 2px solid #f5f0e8;
     background: #f5f0e8;
-    color: #56423d;
+    color: #CB8329;
+    font-weight: bold;
+    font-size: 1.5rem;
+    border-radius: 8px;
+    transform: translate(0, 0);
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow:
+        6px 6px 10px rgba(83, 82, 82, 0.6),
+        -6px -6px 10px rgba(255, 255, 255, 0.1);
+}
+
+.home-cta-wrap:hover .home-cta-inner {
+    transform: translate(4px, 4px);
+    box-shadow:
+        8px 8px 15px rgba(73, 72, 72, 0.8),
+        -8px -8px 15px rgba(255, 255, 255, 0.15);
+}
+
+.home-cta-dashed {
+    position: absolute;
+    inset: 0;
+    border: 2px dashed #f5f0e8;
+    border-radius: 8px;
+    opacity: 0.5;
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+
+.home-cta-wrap:hover .home-cta-dashed {
+    opacity: 1;
+}
+
+.home-cta-ping {
+    position: absolute;
+    width: 1rem;
+    height: 1rem;
+    background: #f5f0e8;
+    border-radius: 50%;
+    box-shadow: 0 0 10px f5f0e8;
+    animation: home-cta-ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+    pointer-events: none;
+}
+
+.home-cta-ping--tr {
+    top: -0.5rem;
+    right: -0.5rem;
+}
+
+.home-cta-ping--bl {
+    bottom: -0.5rem;
+    left: -0.5rem;
+}
+
+.home-cta-ping--m1 {
+    top: 33%;
+    left: 0.75rem;
+    width: 0.75rem;
+    height: 0.75rem;
+    background: #f5f0e8;
+    opacity: 0.7;
+}
+
+.home-cta-ping--m2 {
+    top: 66%;
+    right: 0.75rem;
+    width: 0.75rem;
+    height: 0.75rem;
+    background: #f5f0e8;
+    opacity: 0.7;
+}
+
+@keyframes home-cta-ping {
+    0% {
+        transform: scale(1);
+        opacity: 0.75;
+    }
+
+    75%,
+    100% {
+        transform: scale(2);
+        opacity: 0;
+    }
 }
 
 /* 히어로: 전체 배경 위에 사진 블록을 얹는 구조 */
@@ -193,9 +277,9 @@
         font-size: 1.25rem;
     }
 
-    .home-cta {
-        padding: 0.5rem 1rem;
-        font-size: 0.85rem;
+    .home-cta-inner {
+        padding: 0.75rem 1.5rem;
+        font-size: 1.5rem;
     }
 
     .home-hero {

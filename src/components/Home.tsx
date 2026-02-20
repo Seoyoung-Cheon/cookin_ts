@@ -45,8 +45,18 @@ const Home = () => {
             </section>
 
             <section className="home-cta-section">
-                <button className="home-cta" onClick={handleCookPress}>
-                    요리하기
+                <button
+                    type="button"
+                    className="home-cta-wrap"
+                    onClick={handleCookPress}
+                    aria-label="요리하기"
+                >
+                    <span className="home-cta-inner">요리하기</span>
+                    <span className="home-cta-dashed" aria-hidden />
+                    <span className="home-cta-ping home-cta-ping--tr" aria-hidden />
+                    <span className="home-cta-ping home-cta-ping--bl" aria-hidden />
+                    <span className="home-cta-ping home-cta-ping--m1" aria-hidden />
+                    <span className="home-cta-ping home-cta-ping--m2" aria-hidden />
                 </button>
             </section>
         </div>
