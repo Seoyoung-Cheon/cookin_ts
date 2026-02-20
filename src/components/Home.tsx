@@ -17,10 +17,11 @@ const Home = () => {
         <div className="home-container">
             <header className="home-header">
                 <span className="home-brand">COOKIN</span>
-                <button className="home-cta" onClick={handleCookPress}>
-                    요리하기
-                </button>
             </header>
+
+            <section className="home-tagline">
+                <h1 className="home-tagline-text">당신의 레시피를 찾아보세요!</h1>
+            </section>
 
             <section className="home-hero">
                 <div className="home-hero-wrap">
@@ -30,7 +31,7 @@ const Home = () => {
                             className="home-hero-layer"
                             style={{
                                 backgroundImage: `url(${src})`,
-                                animationDelay: `${i * 5}s`,
+                                animationDelay: `${i * 3}s`,
                             }}
                         />
                     ))}
@@ -41,11 +42,12 @@ const Home = () => {
                     <div className="home-shape home-shape--tr" />
                     <div className="home-shape home-shape--br" />
                 </div>
-                
             </section>
 
-            <section className="home-tagline">
-                <h1 className="home-tagline-text">당신의 레시피를 찾아보세요!</h1>
+            <section className="home-cta-section">
+                <button className="home-cta" onClick={handleCookPress}>
+                    요리하기
+                </button>
             </section>
         </div>
     );

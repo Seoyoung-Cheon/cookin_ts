@@ -8,11 +8,10 @@
     background-color: #CB8329;
 }
 
-/* 헤더: 좌 COOKIN, 우 요리하기 */
+/* 헤더: 좌 COOKIN */
 .home-header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     padding: 1rem 2.5rem;
     background-color: #CB8329;
     flex-shrink: 0;
@@ -77,20 +76,20 @@
     background-repeat: no-repeat;
     border-radius: 8px;
     opacity: 0;
-    animation: home-bg-cycle 20s ease-in-out infinite;
+    animation: home-bg-cycle 12s ease-in-out infinite;
 }
 
-/* 20s 한 사이클, 4장이 5s 간격으로 순서대로 등장·퇴장 (루프) */
+/* 12s 한 사이클, 4장이 3s 간격으로 겹침 없이 순서대로 등장·퇴장 (루프) */
 @keyframes home-bg-cycle {
     0% {
         opacity: 0;
     }
 
-    3% {
+    2% {
         opacity: 1;
     }
 
-    22% {
+    23% {
         opacity: 1;
     }
 
@@ -157,11 +156,12 @@
 }
 
 
-/* 하단 태그라인 */
+/* 상단 태그라인 (가운데) */
 .home-tagline {
-    padding: 2.5rem 2rem;
+    padding: 1.5rem 2rem;
     background-color: #CB8329;
     text-align: center;
+    flex-shrink: 0;
 }
 
 .home-tagline-text {
@@ -171,6 +171,16 @@
     font-weight: normal;
     margin: 0;
     letter-spacing: 0.02em;
+}
+
+/* 하단 요리하기 버튼 (가운데) */
+.home-cta-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2.5rem 2rem;
+    background-color: #CB8329;
+    flex-shrink: 0;
 }
 
 /* 모바일에서도 웹 느낌 유지, 단 좁을 땐 패딩만 조정 */
@@ -250,6 +260,10 @@
     }
 
     .home-tagline {
+        padding: 1.25rem 1rem;
+    }
+
+    .home-cta-section {
         padding: 1.5rem 1rem;
     }
 }
